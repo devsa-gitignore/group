@@ -1,0 +1,15 @@
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Loads your "codes" from the .env file
+
+const connectDB = async () => {
+try {
+    await mongoose.connect(process.env.DATABASE_URL);
+    console.log("Database Connected!");
+} catch (error) {
+    console.error("Connection failed:", error);
+}
+};
+
+connectDB();
