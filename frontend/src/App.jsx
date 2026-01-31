@@ -1,34 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import Account from './pages/Account'
+import Settings from './pages/Settings' // NEW IMPORT
 
-function App() {
-  const [count, setCount] = useState(0)
+import BuyerHome from './pages/BuyerHome'
+import SellerHome from './pages/SellerHome'
+import Track from './pages/Track'
+import Chat from './pages/Chat'
+import Learn from './pages/Learn'
+import Contact from './pages/Contact'
+import About from './pages/About'
+import { AuthProvider } from './context/AuthContext'
+
+// Layout Component to handle Navbar visibility
+const Layout = ({ children }) => {
+  const location = useLocation()
+  // Hide Navbar on Auth pages
+  const hideNavbar = ['/login', '/signup'].includes(location.pathname)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {!hideNavbar && <Navbar />}
+      {children}
     </>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
+            <Route path="/account" element={<Account />} />
+            <Route path="/settings" element={<Settings />} /> {/* NEW ROUTE */}
+          
+            <Route path="/buyer/home" element={<BuyerHome />} />
+            <Route path="/seller/home" element={<SellerHome />} />
+          
+            <Route path="/track/:txnId" element={<Track />} />
+            <Route path="/chat/:id" element={<Chat />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+          
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
